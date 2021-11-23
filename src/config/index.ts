@@ -12,6 +12,8 @@ import {
   NetworkSettings,
   SafeFeatures,
   Wallets,
+  CustomExchangePriceOracle,
+  BalancesHandler,
 } from 'src/config/networks/network.d'
 import { isValidShortChainName } from 'src/routes/routes'
 import {
@@ -37,7 +39,7 @@ export const getNetworks = (): NetworkInfo[] => {
   }))
 }
 
-export const DEFAULT_NETWORK = IS_PRODUCTION ? ETHEREUM_NETWORK.MAINNET : ETHEREUM_NETWORK.RINKEBY
+export const DEFAULT_NETWORK = IS_PRODUCTION ? ETHEREUM_NETWORK.FUSE : ETHEREUM_NETWORK.SPARK
 
 const isNetworkId = (id: unknown): id is ETHEREUM_NETWORK => {
   return Object.values(ETHEREUM_NETWORK).some((network) => network === id)
@@ -253,4 +255,12 @@ export const getExplorerInfo = (hash: string): BlockScanInfo => {
       })
     }
   }
+}
+
+export const getCustomExchangePriceOracle = (): CustomExchangePriceOracle | undefined => {
+  return getConfig().network?.customExchangePriceOracle
+}
+
+export const getBalancesHandler = (): BalancesHandler | undefined => {
+  return getConfig().network?.balancesHandler
 }

@@ -107,7 +107,7 @@ function LoadSafeAddressStep(): ReactElement {
     <Container data-testid={'load-safe-address-step'}>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="lg">
-          You are about to add an existing Gnosis Safe on <NetworkLabel />. First, choose a name and enter the Safe
+          You are about to add an existing Fuse Safe on <NetworkLabel />. First, choose a name and enter the Safe
           address. The name is only stored locally and will never be shared with Gnosis or any third parties.
         </Paragraph>
         <Paragraph color="primary" size="lg">
@@ -174,7 +174,7 @@ function LoadSafeAddressStep(): ReactElement {
           <StyledLink href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </StyledLink>
-          . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
+          . Most importantly, you confirm that your funds are held securely in the Fuse Safe, a smart contract on the
           Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
         </Paragraph>
       </Block>

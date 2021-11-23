@@ -1,4 +1,4 @@
-import { WalletInitOptions } from 'bnc-onboard/dist/src/interfaces'
+import { WalletInitOptions } from '@fuseio/bnc-onboard/dist/src/interfaces'
 
 import { getNetworkId, getRpcServiceUrl, getNetworkConfigDisabledWallets } from 'src/config'
 import { WALLETS } from 'src/config/networks/network.d'
@@ -42,13 +42,13 @@ const wallets = (): Wallet[] => {
       walletName: WALLETS.KEYSTONE,
       desktop: false,
       rpcUrl,
-      appName: 'Gnosis Safe',
+      appName: 'Fuse Safe',
     },
     { walletName: WALLETS.TRUST, preferred: true, desktop: false },
     {
       walletName: WALLETS.LATTICE,
       rpcUrl,
-      appName: 'Gnosis Safe',
+      appName: 'Fuse Safe',
       desktop: false,
     },
     {

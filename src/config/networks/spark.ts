@@ -1,26 +1,26 @@
-import AethLogo from 'src/config/assets/token_aeth.svg'
+import FuseLogo from 'src/config/assets/token_fuse.svg'
 import {
   EnvironmentSettings,
   ETHEREUM_LAYER,
   ETHEREUM_NETWORK,
-  SHORT_NAME,
   FEATURES,
   NetworkConfig,
+  SHORT_NAME,
   WALLETS,
 } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
-  txServiceUrl: 'https://safe-transaction.arbitrum.gnosis.io/api/v1',
-  gasPriceOracles: [],
-  rpcServiceUrl: 'https://arb1.arbitrum.io/rpc',
-  safeAppsRpcServiceUrl: 'https://arb1.arbitrum.io/rpc',
-  networkExplorerName: 'Arbitrum explorer',
-  networkExplorerUrl: 'https://arbiscan.io',
-  networkExplorerApiUrl: 'https://api.arbiscan.io/api',
+  clientGatewayUrl: 'http://ec2-3-124-115-95.eu-central-1.compute.amazonaws.com:8000/cgw/v1',
+  txServiceUrl: 'http://ec2-3-124-115-95.eu-central-1.compute.amazonaws.com:8000/txs/api/v1',
+  gasPrice: 1e9, // 1 Gwei TODO: add gasPriceOracles
+  rpcServiceUrl: 'https://rpc.fusespark.io',
+  safeAppsRpcServiceUrl: 'https://rpc.fusespark.io',
+  networkExplorerName: 'Fuse Explorer',
+  networkExplorerUrl: 'https://explorer.fusespark.io',
+  networkExplorerApiUrl: 'https://explorer.fusespark.io/api',
 }
 
-const arbitrum: NetworkConfig = {
+const spark: NetworkConfig = {
   environment: {
     dev: {
       ...baseConfig,
@@ -33,18 +33,18 @@ const arbitrum: NetworkConfig = {
     },
   },
   network: {
-    id: ETHEREUM_NETWORK.ARBITRUM,
-    shortName: SHORT_NAME.ARBITRUM,
-    backgroundColor: '#2A3245',
-    textColor: '#ffffff',
-    label: 'Arbitrum',
+    id: ETHEREUM_NETWORK.SPARK,
+    shortName: SHORT_NAME.SPARK,
+    backgroundColor: '#23194d',
+    textColor: '#FFFFFF',
+    label: 'Spark',
     ethereumLayer: ETHEREUM_LAYER.L2,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
-      name: 'AETH',
-      symbol: 'AETH',
+      name: 'Spark',
+      symbol: 'SPARK',
       decimals: 18,
-      logoUri: AethLogo,
+      logoUri: FuseLogo,
     },
   },
   disabledWallets: [
@@ -61,8 +61,9 @@ const arbitrum: NetworkConfig = {
     WALLETS.AUTHEREUM,
     WALLETS.LATTICE,
     WALLETS.KEYSTONE,
+    WALLETS.WALLET_CONNECT,
   ],
   disabledFeatures: [FEATURES.DOMAIN_LOOKUP, FEATURES.SPENDING_LIMIT],
 }
 
-export default arbitrum
+export default spark
