@@ -11,7 +11,7 @@ import {
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://gnosis.fusespark.io/cgw/v1',
-  txServiceUrl: 'https://gnosis.fusespark.io:8000/txs/api/v1',
+  txServiceUrl: 'https://gnosis.fusespark.io/txs/api/v1',
   gasPrice: 1e9, // 1 Gwei TODO: add gasPriceOracles
   rpcServiceUrl: 'https://rpc.fuse.io',
   safeAppsRpcServiceUrl: 'https://rpc.fuse.io',
