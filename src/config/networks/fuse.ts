@@ -10,8 +10,8 @@ import {
 } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'http://ec2-3-124-115-95.eu-central-1.compute.amazonaws.com:8000/cgw/v1',
-  txServiceUrl: 'http://ec2-3-124-115-95.eu-central-1.compute.amazonaws.com:8000/txs/api/v1',
+  clientGatewayUrl: 'https://gnosis.fusespark.io/cgw/v1',
+  txServiceUrl: 'https://gnosis.fusespark.io:8000/txs/api/v1',
   gasPrice: 1e9, // 1 Gwei TODO: add gasPriceOracles
   rpcServiceUrl: 'https://rpc.fuse.io',
   safeAppsRpcServiceUrl: 'https://rpc.fuse.io',

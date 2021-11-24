@@ -37,7 +37,7 @@ export const getNetworks = (): NetworkInfo[] => {
   }))
 }
 
-export const DEFAULT_NETWORK = IS_PRODUCTION ? ETHEREUM_NETWORK.MAINNET : ETHEREUM_NETWORK.RINKEBY
+export const DEFAULT_NETWORK = IS_PRODUCTION ? ETHEREUM_NETWORK.FUSE : ETHEREUM_NETWORK.SPARK
 
 const isNetworkId = (id: unknown): id is ETHEREUM_NETWORK => {
   return Object.values(ETHEREUM_NETWORK).some((network) => network === id)
@@ -123,7 +123,9 @@ export const getConfig = (): NetworkSpecificConfiguration => {
   const currentEnvironment = getCurrentEnvironment()
 
   // lookup the config file based on the network specified in the NETWORK variable
+  console.log(getNetworkName())
   const configFile = networks[getNetworkName().toLowerCase()]
+  console.log(networks)
   // defaults to 'production' as it's the only environment that is required for the network configs
   const networkBaseConfig = configFile.environment[currentEnvironment] ?? configFile.environment.production
 

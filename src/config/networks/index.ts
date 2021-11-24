@@ -1,4 +1,4 @@
-// import local from './local'
+import local from './local'
 // import mainnet from './mainnet'
 // import rinkeby from './rinkeby'
 // import xdai from './xdai'
@@ -11,8 +11,9 @@ import fuse from './fuse'
 import spark from './spark'
 
 export default {
+  local,
   fuse,
-  spark
+  spark,
 }
 // export default {
 //   local,
