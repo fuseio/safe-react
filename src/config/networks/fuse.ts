@@ -10,7 +10,7 @@ import {
 } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://safe-service.fuse.io/cgw/v',
+  clientGatewayUrl: 'https://safe-service.fuse.io/cgw/v1',
   txServiceUrl: 'https://safe-service.fuse.io/txs/api/v1',
   gasPrice: 1e9, // 1 Gwei TODO: add gasPriceOracles
   rpcServiceUrl: 'https://rpc.fuse.io',
