@@ -37,7 +37,7 @@ export const getNetworks = (): NetworkInfo[] => {
   }))
 }
 
-export const DEFAULT_NETWORK = IS_PRODUCTION ? ETHEREUM_NETWORK.FUSE : ETHEREUM_NETWORK.SPARK
+export const DEFAULT_NETWORK = ETHEREUM_NETWORK.FUSE
 
 const isNetworkId = (id: unknown): id is ETHEREUM_NETWORK => {
   return Object.values(ETHEREUM_NETWORK).some((network) => network === id)
