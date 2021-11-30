@@ -8,6 +8,7 @@ import {
   SHORT_NAME,
   WALLETS,
 } from 'src/config/networks/network.d'
+import { fuseBalancesHandler } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-service.fuse.io/cgw/v1',
@@ -46,6 +47,11 @@ const fuse: NetworkConfig = {
       decimals: 18,
       logoUri: FuseLogo,
     },
+    customExchangePriceOracle: {
+      exchangePriceAPI: "https://api.fuseswap.com/api/v1/price/",
+      wrappedNativeCurrencyAddress: "0x0BE9e53fd7EDaC9F859882AfdDa116645287C629",
+    },
+    balancesHandler: fuseBalancesHandler
   },
   disabledWallets: [
     WALLETS.TREZOR,

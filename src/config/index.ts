@@ -12,6 +12,8 @@ import {
   NetworkSettings,
   SafeFeatures,
   Wallets,
+  CustomExchangePriceOracle,
+  BalancesHandler,
 } from 'src/config/networks/network.d'
 import { isValidShortChainName } from 'src/routes/routes'
 import {
@@ -255,4 +257,12 @@ export const getExplorerInfo = (hash: string): BlockScanInfo => {
       })
     }
   }
+}
+
+export const getCustomExchangePriceOracle = (): CustomExchangePriceOracle | undefined => {
+  return getConfig().network?.customExchangePriceOracle
+}
+
+export const getBalancesHandler = (): BalancesHandler|undefined => {
+  return getConfig().network?.balancesHandler
 }
