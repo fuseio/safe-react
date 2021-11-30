@@ -1,4 +1,4 @@
-import { WalletInitOptions } from 'bnc-onboard/dist/src/interfaces'
+import { WalletInitOptions } from '@t0mcr8se/bnc-onboard/dist/src/interfaces'
 
 import { getNetworkId, getRpcServiceUrl, getNetworkConfigDisabledWallets } from 'src/config'
 import { WALLETS } from 'src/config/networks/network.d'
@@ -21,7 +21,7 @@ const wallets = (): Wallet[] => {
       rpc: { [getNetworkId()]: rpcUrl },
       networkId: parseInt(getNetworkId(), 10),
       desktop: true,
-      bridge: 'https://safe-walletconnect.gnosis.io/',
+      bridge: 'https://walletconnect.fuse.io/',
     },
     {
       walletName: WALLETS.TREZOR,

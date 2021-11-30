@@ -1,5 +1,5 @@
-import Onboard from 'bnc-onboard'
-import { API, Wallet } from 'bnc-onboard/dist/src/interfaces'
+import Onboard from '@t0mcr8se/bnc-onboard'
+import { API, Wallet } from '@t0mcr8se/bnc-onboard/dist/src/interfaces'
 import { store } from 'src/store'
 import { getNetworkId, getNetworkName } from 'src/config'
 import { setWeb3 } from './getWeb3'
