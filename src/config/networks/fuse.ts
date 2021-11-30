@@ -55,7 +55,6 @@ const fuse: NetworkConfig = {
   },
   disabledWallets: [
     WALLETS.TREZOR,
-    WALLETS.LEDGER,
     WALLETS.COINBASE,
     WALLETS.FORTMATIC,
     WALLETS.OPERA,
