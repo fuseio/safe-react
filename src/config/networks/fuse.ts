@@ -38,7 +38,7 @@ const fuse: NetworkConfig = {
     shortName: SHORT_NAME.FUSE,
     backgroundColor: '#a3eb71',
     textColor: '#0d004d',
-    label: 'Fuse',
+    label: 'fuse',
     ethereumLayer: ETHEREUM_LAYER.L2,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
@@ -48,10 +48,10 @@ const fuse: NetworkConfig = {
       logoUri: FuseLogo,
     },
     customExchangePriceOracle: {
-      exchangePriceAPI: "https://api.fuseswap.com/api/v1/price/",
-      wrappedNativeCurrencyAddress: "0x0BE9e53fd7EDaC9F859882AfdDa116645287C629",
+      exchangePriceAPI: 'https://api.fuseswap.com/api/v1/price/',
+      wrappedNativeCurrencyAddress: '0x0BE9e53fd7EDaC9F859882AfdDa116645287C629',
     },
-    balancesHandler: fuseBalancesHandler
+    balancesHandler: fuseBalancesHandler,
   },
   disabledWallets: [
     WALLETS.TREZOR,
@@ -67,7 +67,6 @@ const fuse: NetworkConfig = {
     WALLETS.AUTHEREUM,
     WALLETS.LATTICE,
     WALLETS.KEYSTONE,
-    WALLETS.WALLET_CONNECT,
   ],
   disabledFeatures: [FEATURES.DOMAIN_LOOKUP, FEATURES.SPENDING_LIMIT],
 }
