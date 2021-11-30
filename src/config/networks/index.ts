@@ -8,10 +8,12 @@ import local from './local'
 // import polygon from './polygon'
 // import bsc from './bsc'
 import fuse from './fuse'
+import mainnet from './mainnet'
 import spark from './spark'
 
 export default {
   local,
+  mainnet,
   fuse,
   spark,
 }

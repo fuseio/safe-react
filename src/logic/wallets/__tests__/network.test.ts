@@ -1,4 +1,4 @@
-import { Wallet } from 'bnc-onboard/dist/src/interfaces'
+import { Wallet } from '@t0mcr8se/bnc-onboard/dist/src/interfaces'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { switchNetwork, shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
 
