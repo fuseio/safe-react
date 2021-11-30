@@ -1,6 +1,7 @@
 import { getBalances, SafeBalanceResponse, TokenInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ListItemSecondaryAction } from '@material-ui/core'
 import { RepeatOneSharp } from '@material-ui/icons'
+import { consoleSandbox } from '@sentry/utils'
 import BigNumber from 'bignumber.js'
 import { response } from 'express'
 import { getBalancesHandler, getClientGatewayUrl, getCustomExchangePriceOracle, getNetworkId } from 'src/config'
@@ -37,19 +38,28 @@ export const fuseBalancesHandler = async (balances: SafeBalanceResponse) : Promi
 
   balances.items = await Promise.all(balances.items.map(async (item) => {
     let tokenAddress = item.tokenInfo.address === ZERO_ADDRESS ? nativeAddress : item.tokenInfo.address
-    let res = await fetch(url + tokenAddress)
+    try {
+      let res = await fetch(url + tokenAddress)
 
-    if(res.ok) {
-      let price = new BigNumber((await res.json()).data.price)
-      let balance = new BigNumber(item.balance)
-      let fiatBalance = balance.multipliedBy(price).div(xDecimals("18")) // TODO: get Token decimals instead of the default 18
+      if(res.ok) {
+        let price = new BigNumber((await res.json()).data.price)
+        let balance = new BigNumber(item.balance)
+        let fiatBalance = balance.multipliedBy(price).div(xDecimals("18")) // TODO: get Token decimals instead of the default 18
 
-      item.fiatConversion = price.toString()
-      item.fiatBalance = fiatBalance.toString()
+        item.fiatConversion = price.toString()
+        item.fiatBalance = fiatBalance.toString()
+      }
+
+      fiatTotal = fiatTotal.plus(new BigNumber(item.fiatBalance))
+      return item
+
+    } catch (err) {
+      console.error(err)
+
+      fiatTotal = fiatTotal.plus(new BigNumber(item.fiatBalance))
+      return item
     }
 
-    fiatTotal = fiatTotal.plus(new BigNumber(item.fiatBalance))
-    return item
   }))
 
   balances.fiatTotal = fiatTotal.toString()
