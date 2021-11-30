@@ -23,11 +23,6 @@ type FetchTokenCurrenciesBalancesProps = {
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-// const getBalance = async (token:string, amount: string, priceAPI: string) => {
-//   let resp = await fetch(priceAPI + token)
-//   if(resp.ok)
-// }
-
 const xDecimals = (x: string) => {
   return new BigNumber(10).pow(new BigNumber(x))
 }
@@ -47,7 +42,7 @@ export const fuseBalancesHandler = async (balances: SafeBalanceResponse) : Promi
     if(res.ok) {
       let price = new BigNumber((await res.json()).data.price)
       let balance = new BigNumber(item.balance)
-      let fiatBalance = balance.multipliedBy(price).div(xDecimals("18"))
+      let fiatBalance = balance.multipliedBy(price).div(xDecimals("18")) // TODO: get Token decimals instead of the default 18
 
       item.fiatConversion = price.toString()
       item.fiatBalance = fiatBalance.toString()
