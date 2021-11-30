@@ -21,7 +21,7 @@ const wallets = (): Wallet[] => {
       rpc: { [getNetworkId()]: rpcUrl },
       networkId: parseInt(getNetworkId(), 10),
       desktop: true,
-      bridge: 'https://walletconnect.fuse.io/',
+      bridge: 'https://safe-walletconnect.gnosis.io/',
     },
     {
       walletName: WALLETS.TREZOR,
