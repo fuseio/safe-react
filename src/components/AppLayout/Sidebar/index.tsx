@@ -77,7 +77,7 @@ const Sidebar = ({
 
     <HelpContainer>
       <StyledDivider />
-      <HelpCenterLink href="https://t.me/fuseio" target="_blank" title="Help Center of Gnosis Safe">
+      <HelpCenterLink href="https://t.me/fuseio" target="_blank" title="Help Center of Fuse Safe">
         <IconText text="HELP CENTER" iconSize="md" textSize="md" color="placeHolder" iconType="question" />
       </HelpCenterLink>
     </HelpContainer>

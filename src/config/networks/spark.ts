@@ -35,8 +35,8 @@ const spark: NetworkConfig = {
   network: {
     id: ETHEREUM_NETWORK.SPARK,
     shortName: SHORT_NAME.SPARK,
-    backgroundColor: '#a3eb71',
-    textColor: '#0d004d',
+    backgroundColor: '#23194d',
+    textColor: '#FFFFFF',
     label: 'Spark',
     ethereumLayer: ETHEREUM_LAYER.L2,
     nativeCoin: {

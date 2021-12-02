@@ -36,8 +36,8 @@ const fuse: NetworkConfig = {
   network: {
     id: ETHEREUM_NETWORK.FUSE,
     shortName: SHORT_NAME.FUSE,
-    backgroundColor: '#a3eb71',
-    textColor: '#0d004d',
+    backgroundColor: '#084516',
+    textColor: '#FFFFFF',
     label: 'fuse',
     ethereumLayer: ETHEREUM_LAYER.L2,
     nativeCoin: {
@@ -66,6 +66,8 @@ const fuse: NetworkConfig = {
     WALLETS.AUTHEREUM,
     WALLETS.LATTICE,
     WALLETS.KEYSTONE,
+    WALLETS.WALLET_CONNECT,
+    WALLETS.LEDGER,
   ],
   disabledFeatures: [FEATURES.DOMAIN_LOOKUP, FEATURES.SPENDING_LIMIT],
 }
