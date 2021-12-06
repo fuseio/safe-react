@@ -1,5 +1,5 @@
-import Onboard from 'bnc-onboard'
-import { API, Wallet } from 'bnc-onboard/dist/src/interfaces'
+import Onboard from '@fuseio/bnc-onboard'
+import { API, Wallet } from '@fuseio/bnc-onboard/dist/src/interfaces'
 import { store } from 'src/store'
 import { getNetworkId, getNetworkName } from 'src/config'
 import { setWeb3 } from './getWeb3'
@@ -41,7 +41,7 @@ const getOnboardConfiguration = () => {
       },
     },
     walletSelect: {
-      description: 'Please select a wallet to connect to Gnosis Safe',
+      description: 'Please select a wallet to connect to Fuse Safe',
       wallets: getSupportedWallets(),
     },
     walletCheck: [

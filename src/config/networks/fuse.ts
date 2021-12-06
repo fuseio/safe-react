@@ -8,10 +8,11 @@ import {
   SHORT_NAME,
   WALLETS,
 } from 'src/config/networks/network.d'
+import { fuseBalancesHandler } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://gnosis.fusespark.io/cgw/v1',
-  txServiceUrl: 'https://gnosis.fusespark.io/txs/api/v1',
+  clientGatewayUrl: 'https://safe-service.fuse.io/cgw/v1',
+  txServiceUrl: 'https://safe-service.fuse.io/txs/api/v1',
   gasPrice: 1e9, // 1 Gwei TODO: add gasPriceOracles
   rpcServiceUrl: 'https://rpc.fuse.io',
   safeAppsRpcServiceUrl: 'https://rpc.fuse.io',
@@ -35,9 +36,9 @@ const fuse: NetworkConfig = {
   network: {
     id: ETHEREUM_NETWORK.FUSE,
     shortName: SHORT_NAME.FUSE,
-    backgroundColor: '#a3eb71',
-    textColor: '#0d004d',
-    label: 'Fuse',
+    backgroundColor: '#084516',
+    textColor: '#FFFFFF',
+    label: 'fuse',
     ethereumLayer: ETHEREUM_LAYER.L2,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
@@ -46,10 +47,14 @@ const fuse: NetworkConfig = {
       decimals: 18,
       logoUri: FuseLogo,
     },
+    customExchangePriceOracle: {
+      exchangePriceAPI: 'https://api.fuseswap.com/api/v1/price/',
+      wrappedNativeCurrencyAddress: '0x0BE9e53fd7EDaC9F859882AfdDa116645287C629',
+    },
+    balancesHandler: fuseBalancesHandler,
   },
   disabledWallets: [
     WALLETS.TREZOR,
-    WALLETS.LEDGER,
     WALLETS.COINBASE,
     WALLETS.FORTMATIC,
     WALLETS.OPERA,
@@ -62,6 +67,7 @@ const fuse: NetworkConfig = {
     WALLETS.LATTICE,
     WALLETS.KEYSTONE,
     WALLETS.WALLET_CONNECT,
+    WALLETS.LEDGER,
   ],
   disabledFeatures: [FEATURES.DOMAIN_LOOKUP, FEATURES.SPENDING_LIMIT],
 }

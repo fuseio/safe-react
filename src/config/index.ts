@@ -12,6 +12,8 @@ import {
   NetworkSettings,
   SafeFeatures,
   Wallets,
+  CustomExchangePriceOracle,
+  BalancesHandler,
 } from 'src/config/networks/network.d'
 import { isValidShortChainName } from 'src/routes/routes'
 import {
@@ -123,9 +125,7 @@ export const getConfig = (): NetworkSpecificConfiguration => {
   const currentEnvironment = getCurrentEnvironment()
 
   // lookup the config file based on the network specified in the NETWORK variable
-  console.log(getNetworkName())
   const configFile = networks[getNetworkName().toLowerCase()]
-  console.log(networks)
   // defaults to 'production' as it's the only environment that is required for the network configs
   const networkBaseConfig = configFile.environment[currentEnvironment] ?? configFile.environment.production
 
@@ -255,4 +255,12 @@ export const getExplorerInfo = (hash: string): BlockScanInfo => {
       })
     }
   }
+}
+
+export const getCustomExchangePriceOracle = (): CustomExchangePriceOracle | undefined => {
+  return getConfig().network?.customExchangePriceOracle
+}
+
+export const getBalancesHandler = (): BalancesHandler | undefined => {
+  return getConfig().network?.balancesHandler
 }
