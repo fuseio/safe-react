@@ -67,7 +67,6 @@ const fuse: NetworkConfig = {
     WALLETS.LATTICE,
     WALLETS.KEYSTONE,
     WALLETS.WALLET_CONNECT,
-    WALLETS.LEDGER,
   ],
   disabledFeatures: [FEATURES.DOMAIN_LOOKUP, FEATURES.SPENDING_LIMIT],
 }
