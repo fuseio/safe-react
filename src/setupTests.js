@@ -23,7 +23,7 @@ function mockedGetRandomValues(buf) {
   buf.set(bytes)
 }
 
-jest.mock('@fuseio/bnc-onboard', () => () => ({
+jest.mock('bnc-onboard', () => () => ({
   config: jest.fn(),
   getState: jest.fn(() => ({
     appNetworkId: 4,

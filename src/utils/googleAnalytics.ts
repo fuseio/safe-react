@@ -114,7 +114,7 @@ export const loadGoogleAnalytics = (): void => {
 
   const customDimensions: ReactGA.FieldsObject = {
     anonymizeIp: true,
-    appName: `Fuse Safe Web`,
+    appName: `Gnosis Safe Web`,
     appVersion: process.env.REACT_APP_APP_VERSION,
     dimension1: getNetworkId(),
   }

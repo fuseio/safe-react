@@ -1,4 +1,4 @@
-import { Wallet } from '@fuseio/bnc-onboard/dist/src/interfaces'
+import { Wallet } from 'bnc-onboard/dist/src/interfaces'
 import onboard from 'src/logic/wallets/onboard'
 import { getConfig, getNetworkId, getRpcServiceUrl } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'

@@ -27,7 +27,7 @@ export const remoteSafeInfoWithModules = {
   ],
   implementation: {
     value: '0x3E5c63644E683549055b9Be8653de26E0B4CD36E',
-    name: 'Fuse Safe: Mastercopy 1.3.0',
+    name: 'Gnosis Safe: Mastercopy 1.3.0',
     logoUrl:
       'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0x3E5c63644E683549055b9Be8653de26E0B4CD36E.png',
   },
@@ -41,7 +41,7 @@ export const remoteSafeInfoWithModules = {
   ],
   fallbackHandler: {
     value: '0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4',
-    name: 'Fuse Safe: Default Callback Handler 1.3.0',
+    name: 'Gnosis Safe: Default Callback Handler 1.3.0',
     logoUrl:
       'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4.png',
   },
@@ -77,14 +77,14 @@ export const remoteSafeInfoWithoutModules = {
   ],
   implementation: {
     value: '0x3E5c63644E683549055b9Be8653de26E0B4CD36E',
-    name: 'Fuse Safe: Mastercopy 1.3.0',
+    name: 'Gnosis Safe: Mastercopy 1.3.0',
     logoUrl:
       'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0x3E5c63644E683549055b9Be8653de26E0B4CD36E.png',
   },
   modules: [],
   fallbackHandler: {
     value: '0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4',
-    name: 'Fuse Safe: Default Callback Handler 1.3.0',
+    name: 'Gnosis Safe: Default Callback Handler 1.3.0',
     logoUrl:
       'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4.png',
   },
