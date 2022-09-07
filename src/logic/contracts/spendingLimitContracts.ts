@@ -1,5 +1,5 @@
 import { AbiItem } from 'web3-utils'
-import { getAllowanceModuleDeployment } from '@gnosis.pm/safe-modules-deployments'
+import { getAllowanceModuleDeployment } from '@t0mcr8se/safe-modules-deployments'
 
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { AllowanceModule } from 'src/types/contracts/allowance-module.d'
