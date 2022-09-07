@@ -1,7 +1,6 @@
 import * as React from 'react'
-import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
-import { EthHashInfo, Identicon, Card } from '@gnosis.pm/safe-react-components'
+import { Identicon } from '@gnosis.pm/safe-react-components'
 import { createStyles } from '@material-ui/core'
 
 import Spacer from 'src/components/Spacer'
@@ -11,6 +10,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
 import { getExplorerInfo } from 'src/config'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
@@ -35,6 +35,10 @@ const styles = createStyles({
     margin: '0 auto',
     padding: '9px',
     lineHeight: 1,
+  },
+  ens: {
+    paddingBottom: md,
+    fontWeight: 'bold',
   },
   details: {
     padding: `0 ${md}`,
@@ -88,15 +92,13 @@ const styles = createStyles({
   },
 })
 
-const StyledCard = styled(Card)`
-  padding: 0px;
-`
 type Props = {
   connected: boolean
   onDisconnect: () => void
   openDashboard?: (() => void | null) | boolean
   provider?: string
   userAddress: string
+  ensName: string
 }
 
 const useStyles = makeStyles(styles)
@@ -107,13 +109,13 @@ export const UserDetails = ({
   openDashboard,
   provider,
   userAddress,
+  ensName,
 }: Props): React.ReactElement => {
-  const explorerUrl = getExplorerInfo(userAddress)
   const connectedNetwork = useSelector(networkSelector)
   const classes = useStyles()
 
   return (
-    <StyledCard>
+    <div>
       <Block className={classes.container}>
         <Row align="center" className={classes.identicon} margin="md">
           {connected ? (
@@ -122,9 +124,19 @@ export const UserDetails = ({
             <KeyRing circleSize={75} dotRight={25} dotSize={25} dotTop={50} hideDot keySize={30} mode="warning" />
           )}
         </Row>
+        {ensName && (
+          <Block className={classes.ens} justify="center">
+            {ensName}
+          </Block>
+        )}
         <Block className={classes.user} justify="center">
           {userAddress ? (
-            <EthHashInfo hash={userAddress} showCopyBtn explorerUrl={explorerUrl} shortenHash={4} />
+            <PrefixedEthHashInfo
+              hash={userAddress}
+              showCopyBtn
+              explorerUrl={getExplorerInfo(userAddress)}
+              shortenHash={4}
+            />
           ) : (
             'Address not available'
           )}
@@ -174,6 +186,6 @@ export const UserDetails = ({
           </Paragraph>
         </Button>
       </Row>
-    </StyledCard>
+    </div>
   )
 }

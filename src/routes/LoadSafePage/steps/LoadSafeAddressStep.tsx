@@ -15,27 +15,34 @@ import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { isChecksumAddress } from 'src/utils/checksumAddress'
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
-import { lg, secondary } from 'src/theme/variables'
+import { lg, secondary, md } from 'src/theme/variables'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import {
   FIELD_LOAD_CUSTOM_SAFE_NAME,
   FIELD_LOAD_IS_LOADING_SAFE_ADDRESS,
   FIELD_LOAD_SAFE_ADDRESS,
+  FIELD_SAFE_OWNER_ENS_LIST,
   FIELD_SAFE_OWNER_LIST,
   FIELD_SAFE_THRESHOLD,
   LoadSafeFormValues,
 } from '../fields/loadFields'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { getLoadSafeName } from '../fields/utils'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { LOAD_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 
 export const loadSafeAddressStepLabel = 'Name and address'
 
 function LoadSafeAddressStep(): ReactElement {
   const [ownersWithName, setOwnersWithName] = useState<AddressBookEntry[]>([])
+  const [ownersWithENSName, setOwnersWithENSName] = useState<Record<string, string>>({})
   const [threshold, setThreshold] = useState<number>()
   const [isValidSafeAddress, setIsValidSafeAddress] = useState<boolean>(false)
   const [isSafeInfoLoading, setIsSafeInfoLoading] = useState<boolean>(false)
+  const chainId = useSelector(currentChainId)
 
   const loadSafeForm = useForm()
   const addressBook = useSelector(currentNetworkAddressBookAsMap)
@@ -62,10 +69,26 @@ function LoadSafeAddressStep(): ReactElement {
       try {
         const { owners, threshold } = await getSafeInfo(safeAddress)
         setIsSafeInfoLoading(false)
-        const ownersWithName = owners.map(({ value: address }) =>
-          makeAddressBookEntry(addressBook[address] || { address, name: '' }),
+        const ownersWithName = owners.map(({ value: address }) => {
+          return makeAddressBookEntry(addressBook[address] || { address, name: '', chainId })
+        })
+
+        const ownersWithENSName = await Promise.all(
+          owners.map(async ({ value: address }) => {
+            const ensName = await reverseENSLookup(address)
+            return makeAddressBookEntry({ address, name: ensName, chainId })
+          }),
         )
+
+        const ownersWithENSNameRecord = ownersWithENSName.reduce<Record<string, string>>((acc, { address, name }) => {
+          return {
+            ...acc,
+            [address]: name,
+          }
+        }, {})
+
         setOwnersWithName(ownersWithName)
+        setOwnersWithENSName(ownersWithENSNameRecord)
         setThreshold(threshold)
         setIsValidSafeAddress(true)
       } catch (error) {
@@ -77,7 +100,7 @@ function LoadSafeAddressStep(): ReactElement {
     }
 
     checkSafeAddress()
-  }, [safeAddress, addressBook])
+  }, [safeAddress, addressBook, chainId])
 
   useEffect(() => {
     if (threshold) {
@@ -95,6 +118,12 @@ function LoadSafeAddressStep(): ReactElement {
     }
   }, [ownersWithName, loadSafeForm])
 
+  useEffect(() => {
+    if (ownersWithENSName) {
+      loadSafeForm.change(FIELD_SAFE_OWNER_ENS_LIST, ownersWithENSName)
+    }
+  }, [ownersWithENSName, loadSafeForm])
+
   const handleScan = (value: string, closeQrModal: () => void): void => {
     loadSafeForm.change(FIELD_LOAD_SAFE_ADDRESS, value)
     closeQrModal()
@@ -102,13 +131,23 @@ function LoadSafeAddressStep(): ReactElement {
 
   const formValues = loadSafeForm.getState().values as LoadSafeFormValues
   const safeName = getLoadSafeName(formValues, addressBook)
+  const hasCustomSafeName = !!formValues[FIELD_LOAD_CUSTOM_SAFE_NAME]
+
+  useEffect(() => {
+    // On unmount, e.g. go back/next
+    return () => {
+      if (hasCustomSafeName) {
+        trackEvent(LOAD_SAFE_EVENTS.NAME_SAFE)
+      }
+    }
+  }, [hasCustomSafeName])
 
   return (
     <Container data-testid={'load-safe-address-step'}>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="lg">
-          You are about to add an existing Gnosis Safe on <NetworkLabel />. First, choose a name and enter the Safe
-          address. The name is only stored locally and will never be shared with Gnosis or any third parties.
+          You are about to add an existing Safe on <NetworkLabel />. First, choose a name and enter the Safe address.
+          The name is only stored locally and will never be shared with us or any third parties.
         </Paragraph>
         <Paragraph color="primary" size="lg">
           Your connected wallet does not have to be the owner of this Safe. In this case, the interface will provide you
@@ -132,7 +171,7 @@ function LoadSafeAddressStep(): ReactElement {
             component={TextField}
             name={FIELD_LOAD_CUSTOM_SAFE_NAME}
             placeholder={safeName}
-            text="Safe name"
+            label="Safe name"
             type="text"
             testId="load-safe-name-field"
           />
@@ -174,8 +213,7 @@ function LoadSafeAddressStep(): ReactElement {
           <StyledLink href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </StyledLink>
-          . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
-          Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
+          .
         </Paragraph>
       </Block>
     </Container>
@@ -228,8 +266,8 @@ const Container = styled(Block)`
 
 const FieldContainer = styled(Block)`
   display: flex;
-  max-width: 460px;
-  margin-top: 12px;
+  max-width: 480px;
+  margin-top: ${md};
 `
 
 const CheckIconAddressAdornment = styled(CheckCircle)`

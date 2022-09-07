@@ -1,5 +1,6 @@
 import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+
+import { CHAIN_ID } from 'src/config/chain.d'
 
 export const remoteSafeInfoWithModules = {
   address: {
@@ -28,7 +29,7 @@ export const remoteSafeInfoWithModules = {
   implementation: {
     value: '0x3E5c63644E683549055b9Be8653de26E0B4CD36E',
     name: 'Gnosis Safe: Mastercopy 1.3.0',
-    logoUrl:
+    logoUri:
       'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0x3E5c63644E683549055b9Be8653de26E0B4CD36E.png',
   },
   guard: {
@@ -42,7 +43,7 @@ export const remoteSafeInfoWithModules = {
   fallbackHandler: {
     value: '0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4',
     name: 'Gnosis Safe: Default Callback Handler 1.3.0',
-    logoUrl:
+    logoUri:
       'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4.png',
   },
   version: '1.3.0',
@@ -78,14 +79,14 @@ export const remoteSafeInfoWithoutModules = {
   implementation: {
     value: '0x3E5c63644E683549055b9Be8653de26E0B4CD36E',
     name: 'Gnosis Safe: Mastercopy 1.3.0',
-    logoUrl:
+    logoUri:
       'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0x3E5c63644E683549055b9Be8653de26E0B4CD36E.png',
   },
   modules: [],
   fallbackHandler: {
     value: '0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4',
     name: 'Gnosis Safe: Default Callback Handler 1.3.0',
-    logoUrl:
+    logoUri:
       'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4.png',
   },
   version: '1.3.0',
@@ -98,7 +99,7 @@ export const localSafesInfo = {
   '0xe414604Ad49602C0b9c0b08D0781ECF96740786a': {
     name: 'Safe A',
     address: '0xe414604Ad49602C0b9c0b08D0781ECF96740786a',
-    chainId: ETHEREUM_NETWORK.RINKEBY,
+    chainId: CHAIN_ID.RINKEBY,
     threshold: 2,
     owners: [
       '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
@@ -167,7 +168,7 @@ export const localSafesInfo = {
     nonce: 492,
     currentVersion: '1.1.1',
     needsUpdate: false,
-    featuresEnabled: ['ERC721', 'ERC1155', 'SAFE_APPS', 'CONTRACT_INTERACTION'],
+    featuresEnabled: ['ERC721', 'SAFE_APPS', 'CONTRACT_INTERACTION'],
     collectiblesTag: '1634550387',
     txQueuedTag: '1634550387',
     txHistoryTag: '1633430459',
@@ -177,7 +178,7 @@ export const localSafesInfo = {
 export const inMemoryPartialSafeInformation = {
   name: 'Safe A',
   address: '0xe414604Ad49602C0b9c0b08D0781ECF96740786a',
-  chainId: ETHEREUM_NETWORK.RINKEBY,
+  chainId: CHAIN_ID.RINKEBY,
   threshold: 2,
   owners: [
     '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
@@ -246,7 +247,7 @@ export const inMemoryPartialSafeInformation = {
   nonce: 492,
   currentVersion: '1.3.0',
   needsUpdate: false,
-  featuresEnabled: ['ERC721', 'ERC1155', 'SAFE_APPS', 'CONTRACT_INTERACTION'],
+  featuresEnabled: ['ERC721', 'SAFE_APPS', 'CONTRACT_INTERACTION', 'SAFE_TX_GAS_OPTIONAL'],
   collectiblesTag: '1634550387',
   txQueuedTag: '1634550387',
   txHistoryTag: '1633430459',

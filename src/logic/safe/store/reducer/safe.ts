@@ -5,7 +5,6 @@ import { REMOVE_SAFE } from 'src/logic/safe/store/actions/removeSafe'
 import { SET_LATEST_MASTER_CONTRACT_VERSION } from 'src/logic/safe/store/actions/setLatestMasterContractVersion'
 import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
 import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { AppReduxState } from 'src/store'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { ADD_OR_UPDATE_SAFE } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { CLEAR_SAFE_LIST } from 'src/logic/safe/store/actions/clearSafeList'
@@ -19,6 +18,7 @@ export const buildSafe = (storedSafe: SafeRecordProps): SafeRecordProps => {
 
   return {
     ...storedSafe,
+    loaded: false,
     owners,
     modules: null,
   }
@@ -51,6 +51,9 @@ const updateSafeProps = (prevSafe, safe) => {
           List.isList(safe[key])
             ? record.set(key, safe[key])
             : record.update(key, (current) => current.merge(safe[key]))
+        } else {
+          // TODO: temporary fix if type is AddressEx because it's neither a Map, nor has a size property
+          record.set(key, safe[key])
         }
       } else {
         // By default we overwrite the value. This is for strings, numbers and unset values
@@ -62,7 +65,7 @@ const updateSafeProps = (prevSafe, safe) => {
 
 type Payloads = SafeRecord | string
 
-export default handleActions<AppReduxState['safes'], Payloads>(
+const safeReducer = handleActions<SafeReducerMap, Payloads>(
   {
     [UPDATE_SAFE]: (state, action: Action<SafeRecord>) => {
       const safe = action.payload
@@ -111,5 +114,7 @@ export default handleActions<AppReduxState['safes'], Payloads>(
   Map({
     safes: Map(),
     latestMasterContractVersion: '',
-  }) as AppReduxState['safes'],
+  }) as SafeReducerMap,
 )
+
+export default safeReducer

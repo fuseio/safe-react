@@ -1,4 +1,3 @@
-import { useSnackbar } from 'notistack'
 import {
   InterfaceMessageIds,
   InterfaceMessageToPayload,
@@ -13,10 +12,14 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
 
-import { getNetworkName, getTxServiceUrl } from 'src/config/'
+import { getChainInfo, getTxServiceUrl } from 'src/config/'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { TransactionParams } from '../components/AppFrame'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
+import { getLegacyChainName } from '../utils'
+import { THIRD_PARTY_COOKIES_CHECK_URL } from './useThirdPartyCookies'
+import { getSafeAppName, trackEvent } from 'src/utils/googleTagManager'
+import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
   messageId: T
@@ -33,9 +36,9 @@ const useIframeMessageHandler = (
   closeModal: () => void,
   iframeRef: MutableRefObject<HTMLIFrameElement | null>,
 ): ReturnType => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(currentSafeWithNames)
   const dispatch = useDispatch()
+  const { chainId, chainName } = getChainInfo()
 
   const sendMessageToIframe = useCallback(
     function <T extends InterfaceMessageIds>(message: InterfaceMessageProps<T>, requestId?: RequestId) {
@@ -62,6 +65,8 @@ const useIframeMessageHandler = (
         return
       }
 
+      trackEvent({ ...SAFE_APPS_EVENTS.LEGACY_API_CALL, label: `${getSafeAppName(selectedApp)}-${messageId}` })
+
       switch (messageId) {
         // typescript doesn't narrow type in switch/case statements
         // issue: https://github.com/microsoft/TypeScript/issues/20375
@@ -82,7 +87,7 @@ const useIframeMessageHandler = (
             messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
             data: {
               safeAddress: safeAddress as string,
-              network: getNetworkName().toLowerCase() as LowercaseNetworks,
+              network: getLegacyChainName(chainName, chainId).toLowerCase() as LowercaseNetworks,
               ethBalance: ethBalance as string,
             },
           }
@@ -110,9 +115,10 @@ const useIframeMessageHandler = (
         data: SDKMessageToPayload[SDKMessageIds]
       }>,
     ) => {
-      if (message.origin === window.origin) {
+      if (message.origin === window.origin || message.origin === THIRD_PARTY_COOKIES_CHECK_URL) {
         return
       }
+
       if (!selectedApp?.url.includes(message.origin)) {
         console.error(`ThirdPartyApp: A message was received from an unknown origin ${message.origin}`)
         return
@@ -125,10 +131,10 @@ const useIframeMessageHandler = (
       window.removeEventListener('message', onIframeMessage)
     }
   }, [
+    chainName,
+    chainId,
     closeModal,
-    closeSnackbar,
     dispatch,
-    enqueueSnackbar,
     ethBalance,
     openConfirmationModal,
     safeAddress,
