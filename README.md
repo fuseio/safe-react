@@ -1,4 +1,4 @@
-# Gnosis Safe
+# Safe web UI
 
 ![license](https://img.shields.io/github/license/gnosis/safe-react)
 ![build](https://img.shields.io/github/workflow/status/gnosis/safe-react/Deploy%20to%20Mainnet%20network/main)
@@ -6,11 +6,15 @@
 ![coverage](https://coveralls.io/repos/github/gnosis/safe-react/badge.svg?branch=main)
 ![release](https://img.shields.io/github/v/release/gnosis/safe-react)
 
-The most trusted platform to store digital assets on Ethereum. More info at [gnosis-safe.io](https://gnosis-safe.io/)
+Safe is the most trusted platform to store digital assets on Ethereum. More info at [gnosis-safe.io](https://gnosis-safe.io/)
 
 For technical information please refer to the [Gnosis Developer Portal](https://docs.gnosis.io/safe/).
 
-For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://discordapp.com/invite/FPMRAwK).
+For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://chat.gnosis-safe.io).
+
+## Transactions
+
+Please see the [transaction](docs/transactions.md) notes for more information about transaction details.
 
 ## Related repos
 
@@ -20,14 +24,14 @@ For support requests, please open up a [bug issue](https://github.com/gnosis/saf
 
 ## Deployed environments
 
-* Production: https://gnosis-safe.io/app/
-* Staging: https://safe-team.staging.gnosisdev.com/app/
-* Dev: https://safe-team.dev.gnosisdev.com/app/
-* PRs: https://pr<PR_NUMBER>--safereact.review-safe.gnosisdev.com/app/
+- Production: https://gnosis-safe.io/app/
+- Staging: https://safe-team.staging.gnosisdev.com/app/
+- Dev: https://safe-team.dev.gnosisdev.com/app/
+- PRs: `https://pr<PR_NUMBER>--safereact.review-safe.gnosisdev.com/app/`
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [Deployment](#deployment) for notes on how to deploy the project on a live system.
+These instructions will help you get a copy of the project up and running on your local machine for development and testing purposes. See [Deployment](#deployment) for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 
@@ -58,17 +62,23 @@ Install dependencies for the project:
 yarn install
 ```
 
-To use the Rinkeby services:
+To launch the dev version of the app locally:
 
 ```
 yarn start
 ```
 
-If you prefer using the Mainnet ones:
+Alternatively, to run the production version of the app:
 
 ```
-yarn start-mainnet
+yarn build
+mv build app
+python -m SimpleHTTPServer 3000
 ```
+
+And open http://localhost:3000/app in the browser.
+
+### Docker
 
 If you prefer to use Docker:
 
@@ -78,16 +88,10 @@ docker-compose build && docker-compose up
 
 ### Building
 
-For Rinkeby:
+To get a complete bundle using the current configuration use:
 
 ```
 yarn build
-```
-
-For Mainnet:
-
-```
-yarn build-mainnet
 ```
 
 ## Running the tests
@@ -113,7 +117,7 @@ yarn lint:fix
 The code is deployed to a testing website automatically on each push via a GitHub Action.
 The GitHub Action will create a new subdomain and post the link as a comment in the PR.
 
-When pushing to the `main` branch, the code will be automatically deployed to [staging](https://safe-team-rinkeby.staging.gnosisdev.com/).
+When pushing to the `main` branch, the code will be automatically deployed to [staging](https://safe-team.staging.gnosisdev.com/).
 
 ### Production
 

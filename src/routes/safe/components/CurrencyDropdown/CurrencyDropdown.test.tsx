@@ -2,7 +2,6 @@ import { fireEvent, render, screen, getByText, waitFor, queryByText } from 'src/
 import { CurrencyDropdown } from '.'
 import { history, ROOT_ROUTE } from 'src/routes/routes'
 import { mockedEndpoints } from 'src/setupTests'
-import { getClientGatewayUrl } from 'src/config'
 
 const mockedAvailableCurrencies = ['USD', 'EUR', 'AED', 'AFN', 'ALL', 'ARS']
 const rinkebyNetworkId = '4'
@@ -23,8 +22,6 @@ describe('<CurrencyDropdown>', () => {
         available: true,
         account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
         network: '4',
-        smartContractWallet: false,
-        hardwareWallet: false,
       },
       currencyValues: {
         selectedCurrency: 'EUR',
@@ -48,8 +45,6 @@ describe('<CurrencyDropdown>', () => {
         available: true,
         account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
         network: '4',
-        smartContractWallet: false,
-        hardwareWallet: false,
       },
       currencyValues: {
         selectedCurrency: 'USD',
@@ -61,6 +56,9 @@ describe('<CurrencyDropdown>', () => {
             address: safeAddress,
           },
         },
+      },
+      currentSession: {
+        currentSafeAddress: safeAddress,
       },
     }
     render(<CurrencyDropdown testId="testId" />, customState)
@@ -88,13 +86,10 @@ describe('<CurrencyDropdown>', () => {
 
     // getBalances endpoint has been called
     expect(mockedEndpoints.getBalances).toBeCalledTimes(1)
-    expect(mockedEndpoints.getBalances).toBeCalledWith(
-      getClientGatewayUrl(),
-      rinkebyNetworkId,
-      safeAddress,
-      selectedCurrency,
-      { exclude_spam: true, trusted: false },
-    )
+    expect(mockedEndpoints.getBalances).toBeCalledWith(rinkebyNetworkId, safeAddress, selectedCurrency, {
+      exclude_spam: true,
+      trusted: false,
+    })
 
     // updates localStorage with the new selected currency
     await waitFor(() => expect(localStorage.getItem('SAFE__currencyValues.selectedCurrency')).toBe('"EUR"'))
@@ -113,8 +108,6 @@ describe('<CurrencyDropdown>', () => {
         available: true,
         account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
         network: '4',
-        smartContractWallet: false,
-        hardwareWallet: false,
       },
       currencyValues: {
         selectedCurrency: 'USD',

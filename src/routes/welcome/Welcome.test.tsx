@@ -6,7 +6,7 @@ describe('<Welcome>', () => {
   it('Should render Welcome container', () => {
     render(<Welcome />)
 
-    expect(screen.getByText('Welcome to Gnosis Safe.')).toBeInTheDocument()
+    expect(screen.getByText('Welcome to the Safe.')).toBeInTheDocument()
   })
 
   it('Create new Safe button should redirect to /open if a wallet is already selected', () => {
@@ -17,8 +17,6 @@ describe('<Welcome>', () => {
         available: true,
         account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
         network: '4',
-        smartContractWallet: false,
-        hardwareWallet: false,
       },
     }
 
@@ -41,8 +39,6 @@ describe('<Welcome>', () => {
         available: true,
         account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
         network: '4',
-        smartContractWallet: false,
-        hardwareWallet: false,
       },
     }
 

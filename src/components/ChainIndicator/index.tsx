@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { getNetworkLabel } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { CircleDot } from 'src/components/AppLayout/Header/components/CircleDot'
+import { getChainById } from 'src/config'
+import { ChainId } from 'src/config/chain.d'
 
 interface Props {
-  chainId: ETHEREUM_NETWORK
-  noLabel?: boolean
+  chainId: ChainId
+  hideCircle?: boolean
 }
 
 const Wrapper = styled.span`
@@ -16,14 +16,13 @@ const Wrapper = styled.span`
     vertical-align: text-bottom;
     margin-right: 0.15em;
   }
-}
 `
 
-const ChainIndicator = ({ chainId, noLabel }: Props): React.ReactElement => {
+const ChainIndicator = ({ chainId, hideCircle }: Props): React.ReactElement => {
   return (
     <Wrapper>
-      <CircleDot networkId={chainId} />
-      {!noLabel && getNetworkLabel(chainId)}
+      {!hideCircle && <CircleDot networkId={chainId} />}
+      {getChainById(chainId).chainName}
     </Wrapper>
   )
 }

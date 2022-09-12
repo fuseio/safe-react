@@ -3,9 +3,17 @@ import { SafeCollectibleResponse, TokenType } from '@gnosis.pm/safe-react-gatewa
 import { Collectibles, NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
-import { fetchSafeCollectibles } from 'src/logic/tokens/api'
-import { TokenResult } from 'src/logic/tokens/api/fetchErc20AndErc721AssetsList'
+import { fetchSafeCollectibles } from 'src/logic/tokens/api/fetchSafeCollectibles'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+
+type TokenResult = {
+  address: string
+  decimals?: number
+  logoUri: string
+  name: string
+  symbol: string
+  type: TokenType
+}
 
 type FetchResult = {
   erc721Assets: TokenResult[]
@@ -72,7 +80,7 @@ class Gnosis {
   }
 
   static extractTokens(tokens: SafeCollectibleResponse[]): NFTTokens {
-    return tokens.map((token) => ({
+    const items = tokens.map((token) => ({
       assetAddress: token.address,
       color: 'red',
       description: token.description || '',
@@ -80,6 +88,7 @@ class Gnosis {
       name: token.name || '',
       tokenId: token.id,
     }))
+    return items
   }
 
   /**

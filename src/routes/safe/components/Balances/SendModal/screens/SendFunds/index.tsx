@@ -4,7 +4,7 @@ import { BigNumber } from 'bignumber.js'
 import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
@@ -23,6 +23,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -39,13 +40,13 @@ import { currentSafeSpendingLimits } from 'src/logic/safe/store/selectors'
 import { sameString } from 'src/utils/strings'
 
 import { styles } from './style'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { spendingLimitAllowedBalance, getSpendingLimitByTokenAddress } from 'src/logic/safe/utils/spendingLimits'
 import { getBalanceAndDecimalsFromToken } from 'src/logic/tokens/utils/tokenHelpers'
-import { getNetworkInfo } from 'src/config'
 import Divider from 'src/components/Divider'
 import { Modal } from 'src/components/Modal'
 import { ModalHeader } from '../ModalHeader'
+import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -97,7 +98,7 @@ const SendFunds = ({
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(currentNetworkAddressBook)
-  const { nativeCoin } = getNetworkInfo()
+  const nativeCurrency = getNativeCurrency()
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: recipientAddress || '', name: '' }
 
@@ -148,10 +149,10 @@ const SendFunds = ({
     const { amount, token: tokenAddress, txType } = values ?? {}
     const tokenValidation = composeValidators(required)(tokenAddress)
 
-    const isSpendingLimit = tokenSpendingLimit && txType === 'spendingLimit'
+    const isSpendingLimitTx = tokenSpendingLimit && isSpendingLimit(txType)
     const tokenDecimals =
       (tokenAddress && Number(getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.decimals)) ||
-      nativeCoin.decimals
+      nativeCurrency.decimals
     const amountValidation = composeValidators(
       required,
       mustBeFloat,
@@ -159,7 +160,7 @@ const SendFunds = ({
       minValue(0, false),
       tokenAddress
         ? maxValue(
-            isSpendingLimit
+            isSpendingLimitTx
               ? spendingLimitAllowedBalance({ tokenAddress, tokenSpendingLimit, tokens })
               : getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.balance ?? 0,
           )
@@ -174,7 +175,7 @@ const SendFunds = ({
 
   return (
     <>
-      <ModalHeader onClose={onClose} subTitle="1 of 2" title="Send funds" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(1, 2)} title="Send funds" />
       <Hairline />
       <GnoForm
         formMutators={formMutators}
@@ -214,6 +215,7 @@ const SendFunds = ({
                 name: scannedName || '',
                 address: scannedAddress,
               })
+              setAddressErrorMsg('')
             } else setAddressErrorMsg(addressErrorMessage)
 
             closeQrModal()
@@ -225,10 +227,10 @@ const SendFunds = ({
           }
 
           const setMaxAllowedAmount = () => {
-            const isSpendingLimit = tokenSpendingLimit && txType === 'spendingLimit'
+            const isSpendingLimitTx = tokenSpendingLimit && isSpendingLimit(txType)
             let maxAmount = selectedToken?.balance.tokenBalance ?? 0
 
-            if (isSpendingLimit) {
+            if (isSpendingLimitTx) {
               const spendingLimitBalance = fromTokenUnit(
                 new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
                 selectedToken?.decimals ?? 0,
@@ -243,7 +245,7 @@ const SendFunds = ({
           return (
             <>
               <Block className={classes.formContainer}>
-                <SafeInfo />
+                <SafeInfo text="Sending from" />
                 <Divider withArrow />
                 {selectedEntry && selectedEntry.address ? (
                   <div
@@ -259,15 +261,16 @@ const SendFunds = ({
                     role="listbox"
                     tabIndex={0}
                   >
-                    <Row margin="xs">
-                      <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                    <Row margin="sm">
+                      <Paragraph color="disabled" noMargin size="lg">
                         Recipient
                       </Paragraph>
                     </Row>
                     <Row align="center" margin="md">
-                      <EthHashInfo
+                      <PrefixedEthHashInfo
                         hash={selectedEntry.address}
                         name={selectedEntry.name}
+                        strongName
                         showAvatar
                         showCopyBtn
                         explorerUrl={getExplorerInfo(selectedEntry.address)}
@@ -290,7 +293,7 @@ const SendFunds = ({
                     </Col>
                   </Row>
                 )}
-                <Row margin="sm">
+                <Row margin="md">
                   <Col>
                     <TokenSelectField
                       initialValue={selectedToken?.address}
@@ -304,7 +307,7 @@ const SendFunds = ({
                 )}
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                    <Paragraph color="disabled" noMargin size="md">
                       Amount
                     </Paragraph>
                     <ButtonLink onClick={setMaxAllowedAmount} weight="bold" testId="send-max-btn">
@@ -325,7 +328,6 @@ const SendFunds = ({
                       }}
                       name="amount"
                       placeholder="Amount*"
-                      text="Amount*"
                       type="text"
                       testId="amount-input"
                     />

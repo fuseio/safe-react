@@ -1,0 +1,11 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - yarn install
+  build:
+    commands:
+      - cp .env.example .env
+      - yarn build
+      - aws s3 sync ./build "s3://${BUCKET_NAME}" --acl=public-read --exclude ".git/*" --delete
+      - aws cloudfront create-invalidation --distribution-id "${DISTRIBUTION_ID}" --paths "/*"

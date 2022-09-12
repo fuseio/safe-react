@@ -14,12 +14,15 @@ import { Divider, Icon } from '@gnosis.pm/safe-react-components'
 import NetworkLabel from './NetworkLabel'
 import Col from 'src/components/layout/Col'
 import { screenSm, sm } from 'src/theme/variables'
-import { getNetworkConfigById } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
-import { NETWORK_ROOT_ROUTES } from 'src/routes/routes'
+
+import { getNetworkRootRoutes } from 'src/routes/routes'
 import { useSelector } from 'react-redux'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { getChainById } from 'src/config'
+import { ChainId } from 'src/config/chain.d'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 
 const styles = {
   root: {
@@ -85,11 +88,13 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
   const chainId = useSelector(currentChainId)
 
   const onNetworkSwitch = useCallback(
-    (e: React.SyntheticEvent, networkId: ETHEREUM_NETWORK) => {
+    (e: React.SyntheticEvent, chainId: ChainId) => {
       e.preventDefault()
       clickAway()
 
-      const newRoute = NETWORK_ROOT_ROUTES.find(({ id }) => id === networkId)
+      trackEvent({ ...OVERVIEW_EVENTS.SWITCH_NETWORK, label: chainId })
+
+      const newRoute = getNetworkRootRoutes().find((network) => network.chainId === chainId)
       if (newRoute) {
         history.push(newRoute.route)
       }
@@ -117,22 +122,20 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
       >
         {({ TransitionProps }) => (
           <Grow {...TransitionProps}>
-            <>
-              <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
-                <List className={classes.network} component="div">
-                  {NETWORK_ROOT_ROUTES.map(({ id, route }) => (
-                    <Fragment key={id}>
-                      <StyledLink onClick={(e) => onNetworkSwitch(e, id)} href={route}>
-                        <NetworkLabel networkInfo={getNetworkConfigById(id)?.network} />
+            <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
+              <List className={classes.network} component="div">
+                {getNetworkRootRoutes().map((network) => (
+                  <Fragment key={network.chainId}>
+                    <StyledLink onClick={(e) => onNetworkSwitch(e, network.chainId)} href={network.route}>
+                      <NetworkLabel networkInfo={getChainById(network.chainId)} />
 
-                        {chainId === id && <Icon type="check" size="md" color="primary" />}
-                      </StyledLink>
-                      <StyledDivider />
-                    </Fragment>
-                  ))}
-                </List>
-              </ClickAwayListener>
-            </>
+                      {chainId === network.chainId && <Icon type="check" size="md" color="primary" />}
+                    </StyledLink>
+                    <StyledDivider />
+                  </Fragment>
+                ))}
+              </List>
+            </ClickAwayListener>
           </Grow>
         )}
       </Popper>

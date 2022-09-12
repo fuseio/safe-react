@@ -19,10 +19,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import { getNotificationsFromTxType, enhanceSnackbarForAction } from 'src/logic/notifications'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { UpdateSafeModal } from 'src/routes/safe/components/Settings/UpdateSafeModal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
@@ -32,11 +29,12 @@ import {
   latestMasterContractVersion as latestMasterContractVersionSelector,
   safesWithNamesAsMap,
 } from 'src/logic/safe/store/selectors'
-import { useAnalytics, SETTINGS_EVENTS } from 'src/utils/googleAnalytics'
 import { fetchMasterCopies, MasterCopy, MasterCopyDeployer } from 'src/logic/contracts/api/masterCopies'
 import { getMasterCopyAddressFromProxyAddress } from 'src/logic/contracts/safeContracts'
 import ChainIndicator from 'src/components/ChainIndicator'
-import { getNetworkId } from 'src/config'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
@@ -60,17 +58,17 @@ const SafeDetails = (): ReactElement => {
   const classes = useStyles()
   const isUserOwner = useSelector(grantedSelector)
   const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)
+  const curChainId = useSelector(currentChainId)
   const {
     address: safeAddress,
     needsUpdate: safeNeedsUpdate,
     currentVersion: safeCurrentVersion,
-    chainId = getNetworkId(),
+    chainId = curChainId,
   } = useSelector(currentSafe)
   const safeNamesMap = useSelector(safesWithNamesAsMap)
   const safeName = safeNamesMap[safeAddress]?.name
 
   const dispatch = useDispatch()
-  const { trackEvent } = useAnalytics()
 
   const [isModalOpen, setModalOpen] = useState(false)
   const [safeInfo, setSafeInfo] = useState<MasterCopy | undefined>()
@@ -80,12 +78,15 @@ const SafeDetails = (): ReactElement => {
   }
 
   const handleSubmit = (values) => {
-    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: safeAddress, name: values.safeName })))
+    trackEvent(SETTINGS_EVENTS.DETAILS.SAFE_NAME)
+
+    dispatch(
+      addressBookAddOrUpdate(
+        makeAddressBookEntry({ address: safeAddress, name: values.safeName, chainId: curChainId }),
+      ),
+    )
     // setting `loadedViaUrl` to `false` as setting a safe's name is considered to intentionally add the safe
     dispatch(updateSafe({ address: safeAddress, loadedViaUrl: false }))
-
-    const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
-    dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
   }
 
   const handleUpdateSafe = () => {
@@ -109,10 +110,6 @@ const SafeDetails = (): ReactElement => {
       ? ` (there's a newer version: ${latestMasterContractVersion})`
       : ''
   }
-
-  useEffect(() => {
-    trackEvent(SETTINGS_EVENTS.DETAILS)
-  }, [trackEvent])
 
   useEffect(() => {
     const getMasterCopyInfo = async () => {
@@ -171,8 +168,8 @@ const SafeDetails = (): ReactElement => {
             <Block className={classes.formContainer}>
               <Heading tag="h2">Modify Safe Name</Heading>
               <Paragraph>
-                You can change the name of this Safe. This name is only stored locally and never shared with Gnosis or
-                any third parties.
+                You can change the name of this Safe. This name is only stored locally and never shared with us or any
+                third parties.
               </Paragraph>
               <Block className={classes.root}>
                 <Field
@@ -181,7 +178,7 @@ const SafeDetails = (): ReactElement => {
                   name="safeName"
                   placeholder="Safe name*"
                   testId={SAFE_NAME_INPUT_TEST_ID}
-                  text="Safe name*"
+                  label="Safe name*"
                   type="text"
                   validate={composeValidators(required, validAddressBookName)}
                 />

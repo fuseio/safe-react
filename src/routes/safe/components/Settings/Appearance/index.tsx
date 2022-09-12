@@ -12,7 +12,11 @@ import { copyShortNameSelector, showShortNameSelector } from 'src/logic/appearan
 import { useDispatch, useSelector } from 'react-redux'
 import { setShowShortName } from 'src/logic/appearance/actions/setShowShortName'
 import { setCopyShortName } from 'src/logic/appearance/actions/setCopyShortName'
-import { extractPrefixedSafeAddress } from 'src/routes/routes'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import useDarkMode from 'src/logic/hooks/useDarkMode'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 // Other settings sections use MUI createStyles .container
 // will adjust that during dark mode implementation
@@ -20,37 +24,71 @@ const Container = styled(Block)`
   padding: ${lg};
 `
 
+const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
+  margin-bottom: 1em;
+`
+
 const Appearance = (): ReactElement => {
   const dispatch = useDispatch()
   const copyShortName = useSelector(copyShortNameSelector)
   const showShortName = useSelector(showShortNameSelector)
+  const { safeAddress } = useSafeAddress()
+  const [darkMode, setDarkMode] = useDarkMode()
 
-  const { shortName, safeAddress } = extractPrefixedSafeAddress()
-
-  const handleShowChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) =>
+  const handleShowChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     dispatch(setShowShortName({ showShortName: checked }))
-  const handleCopyChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) =>
+
+    trackEvent({
+      ...SETTINGS_EVENTS.APPEARANCE.PREPEND_PREFIXES,
+      label: checked,
+    })
+  }
+  const handleCopyChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     dispatch(setCopyShortName({ copyShortName: checked }))
 
+    trackEvent({
+      ...SETTINGS_EVENTS.APPEARANCE.COPY_PREFIXES,
+      label: checked,
+    })
+  }
+
+  const handleInvertChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    setDarkMode(!darkMode)
+
+    trackEvent({
+      ...SETTINGS_EVENTS.APPEARANCE.INVERT_COLORS,
+      label: checked,
+    })
+  }
+
   return (
-    <Container>
-      <Heading tag="h2">Use Chain-Specific Addresses</Heading>
-      <Paragraph>You can choose whether to prepend EIP-3770 short chain names accross Safes.</Paragraph>
-      <Paragraph>
-        {showShortName && <strong>{shortName}:</strong>}
-        {safeAddress}
-      </Paragraph>
-      <FormGroup>
-        <FormControlLabel
-          control={<Checkbox checked={showShortName} onChange={handleShowChange} name="showShortName" />}
-          label="Prepend addresses with chain prefix."
-        />
-        <FormControlLabel
-          control={<Checkbox checked={copyShortName} onChange={handleCopyChange} name="copyShortName" />}
-          label="Copy addresses with chain prefix."
-        />
-      </FormGroup>
-    </Container>
+    <>
+      <Container>
+        <Heading tag="h2">Use Chain-Specific Addresses</Heading>
+        <Paragraph>You can choose whether to prepend EIP-3770 short chain names across Safes.</Paragraph>
+        <StyledPrefixedEthHashInfo hash={safeAddress} />
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox checked={showShortName} onChange={handleShowChange} name="showShortName" />}
+            label="Prepend addresses with chain prefix."
+          />
+          <FormControlLabel
+            control={<Checkbox checked={copyShortName} onChange={handleCopyChange} name="copyShortName" />}
+            label="Copy addresses with chain prefix."
+          />
+        </FormGroup>
+      </Container>
+
+      <Container>
+        <Heading tag="h2">Theme (experimental)</Heading>
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox checked={darkMode} onChange={handleInvertChange} name="showShortName" />}
+            label="Inverted colors"
+          />
+        </FormGroup>
+      </Container>
+    </>
   )
 }
 
