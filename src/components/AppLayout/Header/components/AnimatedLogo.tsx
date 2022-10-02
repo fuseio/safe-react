@@ -1,5 +1,5 @@
 import { useEffect, useState, ReactElement } from 'react'
-import SafeLogo from '../assets/transition-logo.gif'
+import SafeLogo from '../assets/safe-logo.svg'
 
 const useInterval = (delay: number): number => {
   const [count, setCount] = useState<number>(0)
