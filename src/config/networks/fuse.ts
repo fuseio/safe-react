@@ -13,7 +13,7 @@ import { fuseBalancesHandler } from 'src/logic/safe/api/fetchTokenCurrenciesBala
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-service.fuse.io/cgw/v1',
   txServiceUrl: 'https://safe-service.fuse.io/txs/api/v1',
-  gasPrice: 1e9, // 1 Gwei TODO: add gasPriceOracles
+  gasPrice: 11e9, // 1 Gwei TODO: add gasPriceOracles
   rpcServiceUrl: 'https://rpc.fuse.io',
   safeAppsRpcServiceUrl: 'https://rpc.fuse.io',
   networkExplorerName: 'Fuse Explorer',
