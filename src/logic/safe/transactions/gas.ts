@@ -7,6 +7,8 @@ import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSign
 import { fetchSafeTxGasEstimation } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { isFeatureEnabled } from 'src/config'
+import { FEATURES } from 'src/config/networks/network.d'
 
 type SafeTxGasEstimationProps = {
   safeAddress: string
@@ -23,6 +25,9 @@ export const estimateSafeTxGas = async ({
   txAmount,
   operation,
 }: SafeTxGasEstimationProps): Promise<string> => {
+  if (isFeatureEnabled(FEATURES.SAFE_TX_GAS_OPTIONAL)) {
+    return '0'
+  }
   try {
     const safeTxGasEstimation = await fetchSafeTxGasEstimation({
       safeAddress,

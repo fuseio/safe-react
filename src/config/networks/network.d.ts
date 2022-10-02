@@ -1,7 +1,7 @@
 // matches src/logic/tokens/store/model/token.ts `TokenProps` type
 
-import Safe from "@gnosis.pm/safe-core-sdk"
-import { SafeBalanceResponse } from "@gnosis.pm/safe-react-gateway-sdk"
+import Safe from '@gnosis.pm/safe-core-sdk'
+import { SafeBalanceResponse } from '@gnosis.pm/safe-react-gateway-sdk'
 
 export enum WALLETS {
   METAMASK = 'metamask',
@@ -28,6 +28,7 @@ export enum FEATURES {
   CONTRACT_INTERACTION = 'CONTRACT_INTERACTION',
   DOMAIN_LOOKUP = 'DOMAIN_LOOKUP',
   SPENDING_LIMIT = 'SPENDING_LIMIT',
+  SAFE_TX_GAS_OPTIONAL = 'SAFE_TX_GAS_OPTIONAL',
 }
 
 type Token = {
@@ -79,12 +80,11 @@ export enum SHORT_NAME {
 }
 
 export type CustomExchangePriceOracle = {
-  exchangePriceAPI: string,
+  exchangePriceAPI: string
   wrappedNativeCurrencyAddress: String
 }
 
 export type BalancesHandler = (balances: SafeBalanceResponse) => Promise<SafeBalanceResponse>
-
 
 export type NetworkSettings = {
   id: ETHEREUM_NETWORK
