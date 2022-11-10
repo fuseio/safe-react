@@ -1,14 +1,14 @@
 import { useCallback, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
-import { useLocation, matchPath, useRouteMatch } from 'react-router-dom'
+import { useRouteMatch } from 'react-router-dom'
 
 import { ListItemType } from 'src/components/List'
 
 import Header from './Header'
-import Footer from './Footer'
+// import Footer from './Footer'
 import Sidebar from './Sidebar'
 import { MobileNotSupported } from './MobileNotSupported'
-import { SAFE_APP_LANDING_PAGE_ROUTE, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
+import { SAFE_APP_LANDING_PAGE_ROUTE } from 'src/routes/routes'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
 import { screenSm } from 'src/theme/variables'
 import TransactionQueueBar from '../TransactionQueueBar/TransactionQueueBar'
@@ -130,14 +130,9 @@ const Layout: React.FC<Props> = ({
 }): React.ReactElement => {
   const [mobileNotSupportedClosed, setMobileNotSupportedClosed] = useState(false)
   const [expanded, setExpanded] = useState(false)
-  const { pathname } = useLocation()
   useDarkMode()
 
   const closeMobileNotSupported = () => setMobileNotSupportedClosed(true)
-
-  const hasFooter = !!matchPath(pathname, {
-    path: [SAFE_ROUTES.SETTINGS, WELCOME_ROUTE],
-  })
 
   const showSideBar = !useRouteMatch({ path: SAFE_APP_LANDING_PAGE_ROUTE })
   const onSidebarClick = useCallback(
@@ -173,7 +168,7 @@ const Layout: React.FC<Props> = ({
         <ContentWrapper>
           <MainContentWrapper>{children}</MainContentWrapper>
           <TransactionQueueBar />
-          {hasFooter && <Footer />}
+          {/* {hasFooter && <Footer />} */}
         </ContentWrapper>
       </BodyWrapper>
 
