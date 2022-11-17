@@ -1,8 +1,6 @@
-import { Box } from '@material-ui/core'
+import { Box, ButtonBase } from '@material-ui/core'
 import { Text, Tooltip } from '@gnosis.pm/safe-react-components'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
-
 import Img from 'src/components/layout/Img'
 import { getShortName, _getChainId } from 'src/config'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
@@ -35,19 +33,18 @@ const StyledWrapper = styled(Box)`
   justify-content: center;
 `
 
-const StyledLink = styled(Link)`
-  align-self: stretch;
-  display: flex;
-  border-radius: 8px;
-  padding: 0px 8px 0px 8px;
-  text-decoration: none;
-  background-color: ${background};
-  margin: 8px 16px;
-  height: 30px;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-`
+const buttonStyle = {
+  alignSelf: 'stretch',
+  display: 'flex',
+  borderRadius: '8px',
+  padding: '0px 8px 0px 8px',
+  backgroundColor: background,
+  margin: '8px 16px',
+  height: '30px',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '8px',
+}
 
 const SafeTokenWidget = (): JSX.Element | null => {
   const safeTokens = useSelector(extendedSafeTokensSelector)
@@ -86,12 +83,12 @@ const SafeTokenWidget = (): JSX.Element | null => {
     <StyledWrapper>
       <Tooltip title={`Open ${claimingApp.name}`}>
         <Track {...OVERVIEW_EVENTS.SAFE_TOKEN_WIDGET}>
-          <StyledLink to={url || '#'} aria-describedby={'safe-token-widget'}>
+          <ButtonBase href={url || '#'} aria-describedby={'safe-token-widget'} style={buttonStyle}>
             <Img alt="Safe token" src={SafeTokenIcon} />
             <Text size="xl" strong>
               {flooredTotalAllocation}
             </Text>
-          </StyledLink>
+          </ButtonBase>
         </Track>
       </Tooltip>
     </StyledWrapper>
