@@ -1,22 +1,17 @@
 import { useState, useEffect } from 'react'
 import local from './local'
-import session from './session'
 
-const useCachedState = <T>(
-  key: string,
-  isSession = false,
-): [T | undefined, React.Dispatch<React.SetStateAction<T>>] => {
+const useCachedState = <T>(key: string): [T | undefined, React.Dispatch<React.SetStateAction<T>>] => {
   const [cache, setCache] = useState<T>()
-  const storage = isSession ? session : local
 
   useEffect(() => {
-    const saved = storage.getItem<T>(key)
+    const saved = local.getItem<T>(key)
     setCache(saved)
-  }, [key, storage, setCache])
+  }, [key, setCache])
 
   useEffect(() => {
-    storage.setItem<T | undefined>(key, cache)
-  }, [key, storage, cache])
+    local.setItem<T | undefined>(key, cache)
+  }, [key, cache])
 
   return [cache, setCache]
 }

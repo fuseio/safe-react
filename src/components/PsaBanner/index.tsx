@@ -1,4 +1,4 @@
-import { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect, useRef } from 'react'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useSelector } from 'react-redux'
 import Close from '@material-ui/icons/Close'
@@ -79,10 +79,11 @@ const BANNERS = {
 const WARNING_BANNER = 'WARNING_BANNER'
 
 const PsaBanner = (): ReactElement => {
+  const bannerRef = useRef<HTMLDivElement>(null)
   const chainId = useSelector(currentChainId)
   const banner = BANNERS[chainId]
   const isEnabled = hasFeature(WARNING_BANNER as FEATURES)
-  const [closed = false, setClosed] = useCachedState<boolean>(`${WARNING_BANNER}_${chainId}_closed`, true)
+  const [closed = false, setClosed] = useCachedState<boolean>(`${WARNING_BANNER}_${chainId}_closed`)
 
   const showBanner = isEnabled && banner && !closed
 
@@ -91,12 +92,13 @@ const PsaBanner = (): ReactElement => {
   }
 
   useEffect(() => {
-    document.body.setAttribute('data-with-banner', showBanner.toString())
-  }, [showBanner])
+    document.body.style.paddingTop = bannerRef.current ? bannerRef.current.clientHeight + 'px' : ''
+  }, [bannerRef])
 
   return (
     showBanner && (
       <div
+        ref={bannerRef}
         style={{
           position: 'fixed',
           zIndex: 10000,
@@ -107,21 +109,14 @@ const PsaBanner = (): ReactElement => {
           color: '#fff',
           padding: '5px 20px',
           fontSize: '16px',
+          height: '80px',
         }}
       >
-        <div
-          style={{
-            position: 'relative',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            height: '70px',
-          }}
-        >
+        <div style={{ position: 'relative' }}>
           <div style={{ maxWidth: '960px', margin: '0 auto', textAlign: 'center', padding: '10px' }}>{banner}</div>
 
           <Close
-            style={{ position: 'absolute', right: '10px', top: '10px', cursor: 'pointer', zIndex: 2 }}
+            style={{ display: 'none', position: 'absolute', right: '10px', top: '10px', cursor: 'pointer', zIndex: 2 }}
             onClick={onClose}
           />
         </div>
