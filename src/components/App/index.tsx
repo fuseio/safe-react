@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import AppLayout from 'src/components/AppLayout'
 import { SafeListSidebar, SafeListSidebarContext } from 'src/components/SafeListSidebar'
+import CookiesBanner from 'src/components/CookiesBanner'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import Modal from 'src/components/Modal'
@@ -77,7 +78,7 @@ const App: React.FC = ({ children }) => {
           <ReceiveModal onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />
         </Modal>
       )}
-      {/* <CookiesBanner /> */}
+      <CookiesBanner />
     </Frame>
   )
 }
