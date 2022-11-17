@@ -4,7 +4,6 @@ import styled from 'styled-components'
 
 import AppLayout from 'src/components/AppLayout'
 import { SafeListSidebar, SafeListSidebarContext } from 'src/components/SafeListSidebar'
-import CookiesBanner from 'src/components/CookiesBanner'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import Modal from 'src/components/Modal'
@@ -16,6 +15,7 @@ import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
 import { useCurrentSafeAddressSync } from 'src/logic/currentSession/hooks/useCurrentSafeAddressSync'
+import PsaBanner from '../PsaBanner'
 
 const Frame = styled.div`
   display: flex;
@@ -44,6 +44,8 @@ const App: React.FC = ({ children }) => {
 
   return (
     <Frame>
+      <PsaBanner />
+
       <AppLayout
         sidebarItems={sidebarItems}
         safeAddress={safeAddress}
@@ -75,7 +77,7 @@ const App: React.FC = ({ children }) => {
           <ReceiveModal onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />
         </Modal>
       )}
-      <CookiesBanner />
+      {/* <CookiesBanner /> */}
     </Frame>
   )
 }

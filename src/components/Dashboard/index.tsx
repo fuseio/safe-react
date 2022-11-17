@@ -6,7 +6,6 @@ import Overview from './Overview/Overview'
 import SafeApps from './SafeApps'
 import { FeaturedApps } from './FeaturedApps/FeaturedApps'
 import { DashboardTitle } from './styled'
-import RebrandingBanner from './RebrandingBanner'
 
 const Dashboard = (): ReactElement => {
   return (
@@ -17,9 +16,9 @@ const Dashboard = (): ReactElement => {
         <Overview />
       </Grid>
 
-      <Grid item xs={12} md={12} lg={6}>
+      {/* <Grid item xs={12} md={12} lg={6}>
         <RebrandingBanner />
-      </Grid>
+      </Grid> */}
 
       <Grid item xs={12} md={6}>
         <PendingTxsList size={4} />
