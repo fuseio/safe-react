@@ -95,7 +95,6 @@ const styles = createStyles({
 type Props = {
   connected: boolean
   onDisconnect: () => void
-  openDashboard?: (() => void | null) | boolean
   provider?: string
   userAddress: string
   ensName: string
@@ -103,14 +102,7 @@ type Props = {
 
 const useStyles = makeStyles(styles)
 
-export const UserDetails = ({
-  connected,
-  onDisconnect,
-  openDashboard,
-  provider,
-  userAddress,
-  ensName,
-}: Props): React.ReactElement => {
+export const UserDetails = ({ connected, onDisconnect, provider, userAddress, ensName }: Props): React.ReactElement => {
   const connectedNetwork = useSelector(networkSelector)
   const classes = useStyles()
 
@@ -162,15 +154,6 @@ export const UserDetails = ({
         {connectedNetwork && <ChainIndicator chainId={connectedNetwork} />}
       </Row>
       <Hairline margin="xs" />
-      {openDashboard && (
-        <Row className={classes.dashboard}>
-          <Button color="primary" fullWidth onClick={openDashboard} size="medium" variant="contained">
-            <Paragraph className={classes.dashboardText} color="white" noMargin size="md">
-              {provider} Wallet
-            </Paragraph>
-          </Button>
-        </Row>
-      )}
       <Row className={classes.buttonRow}>
         <Button
           className={classes.disconnectButton}

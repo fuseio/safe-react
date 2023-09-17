@@ -1,11 +1,7 @@
-import { lazy, ReactElement } from 'react'
-import { isPairingSupported } from 'src/logic/wallets/pairing/utils'
-import { wrapInSuspense } from 'src/utils/wrapInSuspense'
+import { ReactElement } from 'react'
 
-const PairingDetails = lazy(() => import('src/components/AppLayout/Header/components/ProviderDetails/PairingDetails'))
-
-const MobilePairing = (props: { vertical?: boolean }): ReactElement | null => {
-  return isPairingSupported() ? wrapInSuspense(<PairingDetails {...props} />) : null
+const MobilePairing = (): ReactElement | null => {
+  return null
 }
 
 export default MobilePairing

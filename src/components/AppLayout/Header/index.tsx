@@ -1,4 +1,4 @@
-import { lazy, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import Layout from './components/Layout'
@@ -16,12 +16,6 @@ import {
 } from 'src/logic/wallets/store/selectors'
 import onboard, { loadLastUsedProvider, removeLastUsedProvider } from 'src/logic/wallets/onboard'
 import { isSupportedWallet } from 'src/logic/wallets/utils/walletList'
-import { initPairing, isPairingSupported } from 'src/logic/wallets/pairing/utils'
-import { wrapInSuspense } from 'src/utils/wrapInSuspense'
-
-const HidePairingModule = lazy(
-  () => import('src/components/AppLayout/Header/components/ProviderDetails/HidePairingModule'),
-)
 
 const HeaderComponent = (): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
@@ -36,22 +30,16 @@ const HeaderComponent = (): React.ReactElement => {
       const lastUsedProvider = loadLastUsedProvider()
       const isProviderEnabled = lastUsedProvider && isSupportedWallet(lastUsedProvider)
       if (isProviderEnabled) {
-        await onboard().walletSelect(lastUsedProvider)
-      } else if (isPairingSupported()) {
-        await initPairing()
+        await onboard().connectWallet()
       }
     }
 
     tryToConnectToLastUsedProvider()
   }, [chainId])
 
-  const openDashboard = () => {
-    const { wallet } = onboard().getState()
-    return wallet.type === 'sdk' && wallet.dashboard
-  }
-
-  const onDisconnect = () => {
-    onboard().walletReset()
+  const onDisconnect = async () => {
+    const [wallet] = onboard().state.get().wallets
+    await onboard().disconnectWallet({ label: wallet.label })
     removeLastUsedProvider()
   }
 
@@ -72,7 +60,6 @@ const HeaderComponent = (): React.ReactElement => {
       <UserDetails
         connected={available}
         onDisconnect={onDisconnect}
-        openDashboard={openDashboard()}
         provider={provider}
         userAddress={userAddress}
         ensName={ensName}
@@ -83,12 +70,7 @@ const HeaderComponent = (): React.ReactElement => {
   const info = getProviderInfoBased()
   const details = getProviderDetailsBased()
 
-  return (
-    <>
-      {isPairingSupported() && wrapInSuspense(<HidePairingModule />)}
-      <Layout providerDetails={details} providerInfo={info} />
-    </>
-  )
+  return <Layout providerDetails={details} providerInfo={info} />
 }
 
 export default HeaderComponent

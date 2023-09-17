@@ -2,7 +2,7 @@ import { Operation, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
-import onboard, { checkWallet } from 'src/logic/wallets/onboard'
+import onboard from 'src/logic/wallets/onboard'
 import { getWeb3, isHardwareWallet, isSmartContractWallet } from 'src/logic/wallets/getWeb3'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { createTxNotifications } from 'src/logic/notifications'
@@ -184,7 +184,7 @@ export class TxSender {
 
   async onlyConfirm(): Promise<string | undefined> {
     const { txArgs, safeTxHash, txProps, safeVersion } = this
-    const { wallet } = onboard().getState()
+    const [wallet] = onboard().state.get().wallets
 
     return await tryOffChainSigning(
       safeTxHash,
@@ -255,8 +255,8 @@ export class TxSender {
 
   static async _isOnboardReady(): Promise<boolean> {
     // web3 is set on wallet connection
-    const walletSelected = getWeb3() ? true : await onboard().walletSelect()
-    return walletSelected && checkWallet()
+    const walletSelected = getWeb3() ? true : await onboard().connectWallet()
+    return walletSelected
   }
 
   async prepare(dispatch: Dispatch, state: AppReduxState, txProps: RequiredTxProps): Promise<void> {

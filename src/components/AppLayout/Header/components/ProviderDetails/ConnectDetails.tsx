@@ -20,7 +20,7 @@ const ConnectDetails = ({ vertical = false }: { vertical?: boolean }): ReactElem
   <StyledContainer $vertical={vertical}>
     <ConnectButton data-testid="heading-connect-btn" />
 
-    <MobilePairing vertical={vertical} />
+    <MobilePairing />
   </StyledContainer>
 )
 

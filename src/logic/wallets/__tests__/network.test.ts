@@ -3,6 +3,7 @@ import { Wallet } from 'bnc-onboard/dist/src/interfaces'
 import { ChainId } from 'src/config/chain.d'
 import { switchNetwork, shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
 import { WALLET_PROVIDER } from '../getWeb3'
+import { WalletState } from '@web3-onboard/core'
 
 class CodedError extends Error {
   public code: number
@@ -30,7 +31,7 @@ describe('src/logic/wallets/utils/network', () => {
         name: 'Test',
       }
 
-      expect(switchNetwork(wallet as Wallet, '1438' as unknown as ChainId)).rejects.toThrow(
+      expect(switchNetwork(wallet as unknown as WalletState, '1438' as unknown as ChainId)).rejects.toThrow(
         'Code 301: Error adding a new wallet network (No such chain)',
       )
     })
@@ -47,7 +48,7 @@ describe('src/logic/wallets/utils/network', () => {
         name: 'Test',
       }
 
-      expect(switchNetwork(wallet as Wallet, '1438' as unknown as ChainId)).rejects.toThrow(
+      expect(switchNetwork(wallet as unknown as WalletState, '1438' as unknown as ChainId)).rejects.toThrow(
         'Code 300: Error switching the wallet network (Some error)',
       )
     })
@@ -64,7 +65,7 @@ describe('src/logic/wallets/utils/network', () => {
         name: 'Test',
       }
 
-      expect(switchNetwork(wallet as Wallet, '1438' as unknown as ChainId)).resolves.toEqual(undefined)
+      expect(switchNetwork(wallet as unknown as WalletState, '1438' as unknown as ChainId)).resolves.toEqual(undefined)
     })
 
     it('should resolve to undefined if request succeeds', () => {
@@ -74,7 +75,7 @@ describe('src/logic/wallets/utils/network', () => {
         },
       }
 
-      expect(switchNetwork(wallet as Wallet, '1438' as unknown as ChainId)).resolves.toEqual(undefined)
+      expect(switchNetwork(wallet as unknown as WalletState, '1438' as unknown as ChainId)).resolves.toEqual(undefined)
     })
   })
   describe('shouldSwitchNetwork', () => {
