@@ -80,6 +80,7 @@ const generateBatchRequests = <ReturnValues>({
   // in the outside function where the batch object is created.
   !batch && localBatch.execute()
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   return Promise.all([context, ...values])
 }

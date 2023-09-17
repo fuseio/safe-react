@@ -1,5 +1,6 @@
 import Onboard from '@web3-onboard/core'
 import injectedModule from '@web3-onboard/injected-wallets'
+import walletConnectModule from '@web3-onboard/walletconnect'
 
 import { loadFromStorageWithExpiry, removeFromStorageWithExpiry, saveToStorageWithExpiry } from 'src/utils/storage'
 import { store } from 'src/store'
@@ -8,6 +9,7 @@ import updateProviderAccount from 'src/logic/wallets/store/actions/updateProvide
 import updateProviderNetwork from 'src/logic/wallets/store/actions/updateProviderNetwork'
 import { closeAllNotifications } from '../notifications/store/notifications'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { WALLET_CONNECT_PROJECT_ID } from 'src/utils/constants'
 
 const LAST_USED_PROVIDER_KEY = 'SAFE__lastUsedProvider'
 
@@ -36,9 +38,16 @@ const getOnboard = () => {
     blockExplorerUrl: 'https://explorer.fuse.io',
   }
 
-  const injected = injectedModule()
+  const wcV2InitOptions = {
+    projectId: WALLET_CONNECT_PROJECT_ID,
+    requiredChains: [122],
+    dappUrl: 'https://safe.fuse.io',
+  }
 
-  const wallets = [injected]
+  const injected = injectedModule()
+  const walletConnect = walletConnectModule(wcV2InitOptions)
+
+  const wallets = [injected, walletConnect]
 
   const chains = [fuse]
 

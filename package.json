@@ -32,7 +32,7 @@
     "prettier:check": "yarn prettier --check",
     "prettier:fix": "yarn prettier --write",
     "prettier": "prettier './src/**/*.{js,jsx,ts,tsx}'",
-    "start": "rescripts start",
+    "start": "craco start",
     "start:docker": "docker-compose build && docker-compose up",
     "test": "cross-env TZ=Europe/Berlin REACT_APP_ENV=test rescripts test --env=jsdom",
     "test:coverage": "REACT_APP_ENV=test yarn test --coverage --watchAll=false",
@@ -94,6 +94,7 @@
     "@unstoppabledomains/resolution": "^7.1.4",
     "@web3-onboard/core": "^2.21.1",
     "@web3-onboard/injected-wallets": "^2.10.6",
+    "@web3-onboard/walletconnect": "^2.4.6",
     "abi-decoder": "^2.4.0",
     "axios": "0.21.4",
     "bignumber.js": "9.0.1",
@@ -145,6 +146,8 @@
     "web3-utils": "^1.7.0"
   },
   "devDependencies": {
+    "@babel/plugin-transform-nullish-coalescing-operator": "^7.22.11",
+    "@craco/craco": "6.4.5",
     "@gnosis.pm/safe-core-sdk-types": "1.0.0",
     "@rescripts/cli": "^0.0.16",
     "@sentry/cli": "^1.67.2",
