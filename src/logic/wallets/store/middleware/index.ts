@@ -60,9 +60,10 @@ const providerMiddleware =
       return handledAction
     }
 
-    const { wallet, address } = onboard().getState()
+    const [wallet] = onboard().state.get().wallets
+    const address = wallet.accounts[0].address
 
-    if (name === wallet.name) {
+    if (name === wallet.label) {
       saveLastUsedProvider(name)
     }
 
